@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:barangay_repository_app/widgets/containers/pages/tabs/appointment.dart';
 import 'package:barangay_repository_app/widgets/containers/pages/tabs/home.dart';
 import 'package:barangay_repository_app/widgets/containers/pages/tabs/profile.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,14 @@ class MainTab extends StatefulWidget {
 class _MainTabState extends State<MainTab> {
   PageController _pageController = new PageController();
   int _selectedIndex = 0;
-  int maxCount = 2;
+  int maxCount = 3;
 
   /// widget list
-  final List<Widget> bottomBarPages = [const HomePage(), const ProfilePage()];
+  final List<Widget> bottomBarPages = [
+    const HomePage(),
+    const AppointmentPage(),
+    const ProfilePage(),
+  ];
 
   @override
   void dispose() {
@@ -47,9 +52,14 @@ class _MainTabState extends State<MainTab> {
         bottomNavigationBar: BottomNavigationBar(
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.calendar_month),
               label: 'Home',
               backgroundColor: Colors.red,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.edit_calendar),
+              label: 'Apoointment',
+              backgroundColor: Colors.orange,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),

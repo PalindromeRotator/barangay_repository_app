@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "395146929100",
+    "project_id": "barangay-management-syst-eb145",
+    "storage_bucket": "barangay-management-syst-eb145.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395146929100:android:06e6657db30b09574bb369",
+        "android_client_info": {
+          "package_name": "com.example.barangay_repository_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "395146929100-k8thguvo93k77fjliflfnq6am6et6rhc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFXriOLNOvllrCx4NtU5z5hDoBoHcfuyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "395146929100-k8thguvo93k77fjliflfnq6am6et6rhc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
