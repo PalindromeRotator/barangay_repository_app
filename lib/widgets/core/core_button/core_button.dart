@@ -3,14 +3,11 @@
 import 'package:barangay_repository_app/global/responsive_sizing.dart';
 import 'package:flutter/material.dart';
 
-class CoreButton extends StatefulWidget {
-  const CoreButton({super.key, required this.text});
+class CoreButton extends StatelessWidget {
+  const CoreButton({super.key, required this.text, required this.onPressed});
   final String text;
-  @override
-  State<CoreButton> createState() => _CoreButtonState();
-}
+  final VoidCallback onPressed;
 
-class _CoreButtonState extends State<CoreButton> {
   @override
   Widget build(BuildContext context) {
     ResponsiveSizing responsiveSizing = new ResponsiveSizing(context);
@@ -18,9 +15,9 @@ class _CoreButtonState extends State<CoreButton> {
         width: responsiveSizing.calc_width(311),
         height: responsiveSizing.calc_height(55),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: onPressed,
           child: Text(
-            widget.text,
+            text,
             style: TextStyle(color: Colors.black),
           ),
           style: ButtonStyle(
@@ -36,3 +33,37 @@ class _CoreButtonState extends State<CoreButton> {
         ));
   }
 }
+
+// class CoreButton extends StatefulWidget {
+//   const CoreButton({super.key, required this.text});
+//   final String text;
+//   @override
+//   State<CoreButton> createState() => _CoreButtonState();
+// }
+
+// class _CoreButtonState extends State<CoreButton> {
+//   @override
+//   Widget build(BuildContext context) {
+//     ResponsiveSizing responsiveSizing = new ResponsiveSizing(context);
+//     return Container(
+//         width: responsiveSizing.calc_width(311),
+//         height: responsiveSizing.calc_height(55),
+//         child: ElevatedButton(
+//           onPressed: () {},
+//           child: Text(
+//             widget.text,
+//             style: TextStyle(color: Colors.black),
+//           ),
+//           style: ButtonStyle(
+//             backgroundColor: MaterialStateProperty.resolveWith<Color>(
+//               (Set<MaterialState> states) {
+//                 if (states.contains(MaterialState.pressed)) {
+//                   return Color(0xFFFECD08);
+//                 }
+//                 return Color(0xFFFECD08);
+//               },
+//             ),
+//           ),
+//         ));
+//   }
+// }
