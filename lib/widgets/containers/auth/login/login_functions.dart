@@ -1,5 +1,6 @@
 import 'package:barangay_repository_app/firestore_query.dart';
 import 'package:barangay_repository_app/main.dart';
+import 'package:barangay_repository_app/widgets/containers/auth/register/verification_sent_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +39,17 @@ class LoginFunctions {
                   child: const Text('OK'))
             ]).show();
       } else {
-        Navigator.push(
-            _context!, MaterialPageRoute(builder: (context) => _navigator!));
+        if (value.emailVerified) {
+          Navigator.push(
+              _context!, MaterialPageRoute(builder: (context) => _navigator!));
+        } else {
+          FirebaseAuth.instance.signOut();
+          Navigator.push(
+              _context!,
+              MaterialPageRoute(
+                  builder: (context) => const VerificationSentPage()));
+        }
+
         // Alert(
         //     context: _context!,
         //     type: AlertType.success,

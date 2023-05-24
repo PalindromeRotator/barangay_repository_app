@@ -57,8 +57,11 @@ class FirestoreQuery {
         email: email,
         password: password,
       )
-          .then((value) {
+          .then((value) async {
         stringThrow = 1;
+        await FirebaseAuth.instance.setLanguageCode("en");
+        await value.user?.sendEmailVerification();
+        await FirebaseAuth.instance.signOut();
         if (kDebugMode) {
           print(value.user);
         }

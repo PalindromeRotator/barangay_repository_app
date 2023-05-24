@@ -3,10 +3,12 @@
 import 'package:barangay_repository_app/firestore_query.dart';
 import 'package:barangay_repository_app/widgets/containers/auth/login/login.dart';
 import 'package:barangay_repository_app/widgets/containers/auth/register/register_functions.dart';
+import 'package:barangay_repository_app/widgets/containers/auth/register/verification_sent_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:barangay_repository_app/widgets/core/core_button/core_button.dart';
 import 'package:barangay_repository_app/widgets/core/core_textfield/core_textfield.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -111,14 +113,29 @@ class _RegisterPageState extends State<RegisterPage> {
                 CoreButton(
                     text: 'Register',
                     onPressed: (() {
-                      RegisterFunctions registerFunctions = RegisterFunctions(
-                          emailController.text,
-                          passwordController.text,
-                          firestoreQuery,
-                          context,
-                          LoginPage());
+                      if (passwordController.text != '' &&
+                          confirmPasswordController.text != '') {
+                        RegisterFunctions registerFunctions = RegisterFunctions(
+                            emailController.text,
+                            passwordController.text,
+                            firestoreQuery,
+                            context,
+                            VerificationSentPage());
 
-                      registerFunctions.registerAcount();
+                        registerFunctions.registerAcount();
+                      } else {
+                        Alert(
+                            context: context,
+                            type: AlertType.error,
+                            desc: "Password and Confirm Password not Matched.",
+                            closeFunction: null,
+                            closeIcon: null,
+                            buttons: [
+                              DialogButton(
+                                  onPressed: (() => Navigator.pop(context)),
+                                  child: const Text('OK'))
+                            ]).show();
+                      }
                     })),
                 TextButton(
                     onPressed: (() {
