@@ -183,19 +183,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                         precintNumber,
                                         address,
                                         _auth.currentUser);
-                                    Alert(
-                                        context: context,
-                                        type: AlertType.info,
-                                        desc:
-                                            "Changing information requires logout to reflect.",
-                                        closeFunction: null,
-                                        closeIcon: null,
-                                        buttons: [
-                                          DialogButton(
-                                              onPressed: (() =>
-                                                  Navigator.pop(context)),
-                                              child: const Text('OK'))
-                                        ]).show();
                                   } else {
                                     Alert(
                                         context: context,

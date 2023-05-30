@@ -150,6 +150,7 @@ class FirebaseQuery {
       String precintNumber, String address, String documentId) async {
     FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
     DateTime currentTime = DateTime.now();
+
     final users = <String, dynamic>{
       "completeAddress": address,
       "completeName": name,
@@ -158,11 +159,14 @@ class FirebaseQuery {
       "updatedAt": currentTime
     };
 
-    firestoreDB
-        .collection("users")
-        .doc(documentId)
-        .set(users)
-        .onError((e, _) => print("Error writing document: $e"));
+    final usersRef = firestoreDB.collection("users").doc(documentId);
+    usersRef.update(users);
+
+    // firestoreDB
+    //     .collection("users")
+    //     .doc(documentId)
+    //     .set(users)
+    //     .onError((e, _) => print("Error writing document: $e"));
   }
 
   Future<void> logout(FirebaseAuth auth, Function(void) thenPress) async {
