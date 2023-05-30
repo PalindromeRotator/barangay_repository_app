@@ -1,4 +1,4 @@
-import 'package:barangay_repository_app/firestore_query.dart';
+import 'package:barangay_repository_app/firebase_query.dart';
 import 'package:barangay_repository_app/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,21 +7,23 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 class RegisterFunctions {
   String? _email;
   String? _password;
-  FirestoreQuery? _firestoreQuery;
+  String? _fullName;
+  FirebaseQuery? _firebaseQuery;
   BuildContext? _context;
   Widget? _navigator;
 
-  RegisterFunctions(String email, String password,
-      FirestoreQuery firestoreQuery, BuildContext context, Widget navigator) {
+  RegisterFunctions(String email, String password, String fullName,
+      FirebaseQuery firebaseQuery, BuildContext context) {
     _email = email;
     _password = password;
-    _firestoreQuery = firestoreQuery;
+    _fullName = fullName;
+    _firebaseQuery = firebaseQuery;
     _context = context;
-    _navigator = navigator;
   }
-  void registerAcount() {
-    _firestoreQuery!
-        .createUserWithEmailAndPassword(_email!, _password!)
+  Future<bool> registerAcount() async {
+    bool returnFlag = false;
+    await _firebaseQuery!
+        .createUserWithEmailAndPassword(_email!, _password!, _fullName!)
         .then((value) {
       switch (value) {
         case 0:
@@ -40,6 +42,7 @@ class RegisterFunctions {
           }
         case 1:
           {
+            returnFlag = true;
             Alert(
                 context: _context!,
                 type: AlertType.success,
@@ -50,8 +53,7 @@ class RegisterFunctions {
                   DialogButton(
                       onPressed: (() => Navigator.pop(_context!)),
                       child: const Text('OK'))
-                ]).show().then((value) => Navigator.push(_context!,
-                MaterialPageRoute(builder: (context) => _navigator!)));
+                ]).show();
             break;
           }
         case 2:
@@ -97,5 +99,7 @@ class RegisterFunctions {
           }
       }
     });
+
+    return returnFlag;
   }
 }

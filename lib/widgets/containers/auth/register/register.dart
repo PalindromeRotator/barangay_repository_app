@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers
 
-import 'package:barangay_repository_app/firestore_query.dart';
+import 'package:barangay_repository_app/firebase_query.dart';
 import 'package:barangay_repository_app/widgets/containers/auth/login/login.dart';
+import 'package:barangay_repository_app/widgets/containers/auth/login/login_functions.dart';
 import 'package:barangay_repository_app/widgets/containers/auth/register/register_functions.dart';
 import 'package:barangay_repository_app/widgets/containers/auth/register/verification_sent_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:barangay_repository_app/widgets/core/core_button/core_button.dart';
@@ -25,13 +27,13 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-
-  FirestoreQuery firestoreQuery = FirestoreQuery();
-
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  FirebaseQuery firebaseQuery = FirebaseQuery();
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
-    firestoreQuery.main();
+    firebaseQuery.main();
   }
 
   @override
@@ -56,6 +58,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                isLoading
+                    ? Center(
+                        child:
+                            CircularProgressIndicator(), // Add CircularProgressIndicator widget here
+                      )
+                    : Container(),
                 Text(
                   'Register your account here',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -113,16 +121,43 @@ class _RegisterPageState extends State<RegisterPage> {
                 CoreButton(
                     text: 'Register',
                     onPressed: (() {
+                      setState(() {
+                        isLoading = true;
+                      });
                       if (passwordController.text != '' &&
                           confirmPasswordController.text != '') {
                         RegisterFunctions registerFunctions = RegisterFunctions(
-                            emailController.text,
-                            passwordController.text,
-                            firestoreQuery,
-                            context,
-                            VerificationSentPage());
+                          emailController.text,
+                          passwordController.text,
+                          fullNameController.text,
+                          firebaseQuery,
+                          context,
+                        );
 
-                        registerFunctions.registerAcount();
+                        registerFunctions.registerAcount().then((value) {
+                          print('value: $value');
+                          if (value) {
+                            // firebaseQuery
+                            //     .setUserCredentials(
+                            //         precintNumberController.text,
+                            //         lengthOfStayController.text,
+                            //         addressController.text,
+                            //         fullNameController.text,
+                            //         firebaseAuth.currentUser?.uid)
+                            //     .then((credentialValue) {
+                            //   if (credentialValue) {
+                            //     setState(() {
+                            //       isLoading = false;
+                            //     });
+                            //     firebaseAuth.signOut();
+                            //     Navigator.push(
+                            //         context,
+                            //         MaterialPageRoute(
+                            //             builder: (context) => LoginPage()));
+                            //   }
+                            // });
+                          }
+                        });
                       } else {
                         Alert(
                             context: context,

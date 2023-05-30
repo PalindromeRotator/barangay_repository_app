@@ -1,4 +1,4 @@
-import 'package:barangay_repository_app/firestore_query.dart';
+import 'package:barangay_repository_app/firebase_query.dart';
 import 'package:barangay_repository_app/main.dart';
 import 'package:barangay_repository_app/widgets/containers/auth/register/verification_sent_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,22 +9,21 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 class LoginFunctions {
   String? _email;
   String? _password;
-  FirestoreQuery? _firestoreQuery;
+  FirebaseQuery? _firebaseQuery;
   BuildContext? _context;
-  Widget? _navigator;
   FirebaseAuth? _auth;
 
-  LoginFunctions(String email, String password, FirestoreQuery firestoreQuery,
-      BuildContext context, Widget navigator) {
+  LoginFunctions(String email, String password, FirebaseQuery firebaseQuery,
+      BuildContext context) {
     _email = email;
     _password = password;
-    _firestoreQuery = firestoreQuery;
+    _firebaseQuery = firebaseQuery;
     _context = context;
-    _navigator = navigator;
   }
 
-  void loginAcount() {
-    _firestoreQuery!
+  Future<bool> loginAcount() async {
+    bool returnFlag = false;
+    await _firebaseQuery!
         .signInWithEmailAndPassword(_email!, _password!)
         .then((value) {
       if (value == null) {
@@ -35,21 +34,14 @@ class LoginFunctions {
             closeFunction: null,
             buttons: [
               DialogButton(
-                  onPressed: (() => Navigator.pop(_context!)),
+                  onPressed: (() {
+                    Navigator.pop(_context!);
+                    returnFlag = false;
+                  }),
                   child: const Text('OK'))
             ]).show();
       } else {
-        if (value.emailVerified) {
-          Navigator.push(
-              _context!, MaterialPageRoute(builder: (context) => _navigator!));
-        } else {
-          FirebaseAuth.instance.signOut();
-          Navigator.push(
-              _context!,
-              MaterialPageRoute(
-                  builder: (context) => const VerificationSentPage()));
-        }
-
+        returnFlag = true;
         // Alert(
         //     context: _context!,
         //     type: AlertType.success,
@@ -65,5 +57,7 @@ class LoginFunctions {
         // });
       }
     });
+
+    return returnFlag;
   }
 }

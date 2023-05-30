@@ -1,10 +1,12 @@
 import 'package:barangay_repository_app/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-class FirestoreQuery {
+class FirebaseQuery {
+  // FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
   Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
@@ -49,7 +51,7 @@ class FirestoreQuery {
   }
 
   Future<int> createUserWithEmailAndPassword(
-      String email, String password) async {
+      String email, String password, String fullName) async {
     int stringThrow = 0;
     try {
       final credential = await FirebaseAuth.instance
@@ -58,10 +60,10 @@ class FirestoreQuery {
         password: password,
       )
           .then((value) async {
+        await value.user?.updateDisplayName(fullName);
         stringThrow = 1;
         await FirebaseAuth.instance.setLanguageCode("en");
         await value.user?.sendEmailVerification();
-        await FirebaseAuth.instance.signOut();
         if (kDebugMode) {
           print(value.user);
         }
@@ -98,6 +100,69 @@ class FirestoreQuery {
       }
     }
     return userReturn;
+  }
+
+  Future<void> updateProfile(String name, String lengthOfStay,
+      String precintNumber, String address, User? user) async {
+    await user?.updateDisplayName(name);
+    await updateUserOtherCredentials(
+        name, lengthOfStay, precintNumber, address, user!.uid.toString());
+  }
+
+  //---------------------------- FIRESTORE QUERIES ------------------------------------//
+
+  Future<Map<String, dynamic>> getUserCredentials(String documentId) async {
+    FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
+    final docRef = firestoreDB.collection("users").doc(documentId);
+    var snapshot = await docRef.get();
+    return snapshot.data() as Map<String, dynamic>;
+    // ...
+  }
+
+  Future<bool> setUserCredentials(
+    String precint_number,
+    String length_of_stay,
+    String address,
+    String fullName,
+    String? docId,
+  ) async {
+    FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
+    bool returnFlag = false;
+    DateTime currentTime = DateTime.now();
+    // int epochTime = currentTime.millisecondsSinceEpoch;
+    final credentials = <String, dynamic>{
+      "completeName": fullName,
+      "precintNumber": precint_number,
+      "lengthOfStay": length_of_stay,
+      "completeAddress": address,
+      "createdAt": currentTime,
+    };
+    firestoreDB
+        .collection("users")
+        .doc(docId)
+        .set(credentials)
+        .then((value) => returnFlag = true)
+        .catchError((error) => print('error: $error'));
+    return returnFlag;
+  }
+
+  Future<void> updateUserOtherCredentials(String name, String lengthOfStay,
+      String precintNumber, String address, String documentId) async {
+    FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
+    DateTime currentTime = DateTime.now();
+    final users = <String, dynamic>{
+      "completeAddress": address,
+      "completeName": name,
+      "lengthOfStay": lengthOfStay,
+      "precintNumber": precintNumber,
+      "updatedAt": currentTime
+    };
+
+    firestoreDB
+        .collection("users")
+        .doc(documentId)
+        .set(users)
+        .onError((e, _) => print("Error writing document: $e"));
   }
 
   Future<void> logout(FirebaseAuth auth, Function(void) thenPress) async {

@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers
 
-import 'package:barangay_repository_app/firestore_query.dart';
+import 'package:barangay_repository_app/firebase_query.dart';
 import 'package:barangay_repository_app/widgets/containers/auth/login/login_functions.dart';
 import 'package:barangay_repository_app/widgets/containers/auth/register/register.dart';
 import 'package:barangay_repository_app/widgets/containers/pages/tabs/main_tab.dart';
@@ -17,13 +17,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  FirestoreQuery firestoreQuery = FirestoreQuery();
+  FirebaseQuery firebaseQuery = FirebaseQuery();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
-    firestoreQuery.main();
+    firebaseQuery.main();
   }
 
   @override
@@ -35,6 +36,12 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                isLoading
+                    ? Center(
+                        child:
+                            CircularProgressIndicator(), // Add CircularProgressIndicator widget here
+                      )
+                    : Container(),
                 Text(
                   'Login your account here',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -56,16 +63,25 @@ class _LoginPageState extends State<LoginPage> {
                 CoreButton(
                   text: 'Login',
                   onPressed: () {
+                    setState(() {
+                      isLoading = true;
+                    });
                     LoginFunctions loginFunctions = LoginFunctions(
                         emailController.text,
                         passwordController.text,
-                        firestoreQuery,
-                        context,
-                        MainTab());
+                        firebaseQuery,
+                        context);
 
-                    loginFunctions.loginAcount();
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => MainTab()));
+                    loginFunctions.loginAcount().then((value) {
+                      print(value);
+                      setState(() {
+                        isLoading = false;
+                      });
+                      if (value) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => MainTab()));
+                      }
+                    });
                   },
                 ),
                 TextButton(

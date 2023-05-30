@@ -1,11 +1,12 @@
-import 'package:barangay_repository_app/firestore_query.dart';
+import 'package:barangay_repository_app/firebase_query.dart';
 import 'package:barangay_repository_app/splash_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 
-FirestoreQuery firestoreQuery = FirestoreQuery();
-void main() {
-  firestoreQuery.main();
+FirebaseQuery firestoreQuery = FirebaseQuery();
+void main() async {
+  await firestoreQuery.main();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

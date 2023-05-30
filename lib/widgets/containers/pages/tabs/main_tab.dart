@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:barangay_repository_app/firebase_query.dart';
 import 'package:barangay_repository_app/widgets/containers/pages/tabs/appointment.dart';
 import 'package:barangay_repository_app/widgets/containers/pages/tabs/home.dart';
 import 'package:barangay_repository_app/widgets/containers/pages/tabs/profile.dart';
@@ -16,6 +17,7 @@ class MainTab extends StatefulWidget {
 }
 
 class _MainTabState extends State<MainTab> {
+  FirebaseQuery firebaseQuery = FirebaseQuery();
   PageController _pageController = new PageController();
   int _selectedIndex = 0;
   int maxCount = 3;
@@ -36,6 +38,7 @@ class _MainTabState extends State<MainTab> {
   @override
   void initState() {
     super.initState();
+    firebaseQuery.main();
   }
 
   void _onItemTapped(int index) {
