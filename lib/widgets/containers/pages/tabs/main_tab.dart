@@ -53,6 +53,7 @@ class _MainTabState extends State<MainTab> {
     return Scaffold(
         body: bottomBarPages.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: const Color(0xFFFECD08),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month),

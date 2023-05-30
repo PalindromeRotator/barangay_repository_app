@@ -93,9 +93,46 @@ class _ProfilePageState extends State<ProfilePage> {
                         IconButton(
                           icon: Icon(_isEditMode ? Icons.done : Icons.edit),
                           onPressed: () {
-                            setState(() {
-                              _isEditMode = !_isEditMode;
-                            });
+                            if (_isEditMode) {
+                              // Save profile logic here
+                              String name = _nameController.text;
+                              String email = _emailController.text;
+                              String address = _addressController.text;
+                              String lengthOfStay =
+                                  _lengthOfStayController.text;
+                              String precintNumber =
+                                  _precintNumberController.text;
+                              if (name != '' ||
+                                  email != '' ||
+                                  address != '' ||
+                                  lengthOfStay != '' ||
+                                  precintNumber != '') {
+                                setState(() {
+                                  _isEditMode = false;
+                                });
+
+                                firebaseQuery.updateProfile(name, lengthOfStay,
+                                    precintNumber, address, _auth.currentUser);
+                              } else {
+                                Alert(
+                                    context: context,
+                                    type: AlertType.error,
+                                    desc:
+                                        "Profile information cannot be empty.",
+                                    closeFunction: null,
+                                    closeIcon: null,
+                                    buttons: [
+                                      DialogButton(
+                                          onPressed: (() =>
+                                              Navigator.pop(context)),
+                                          child: const Text('OK'))
+                                    ]).show();
+                              }
+                            } else {
+                              setState(() {
+                                _isEditMode = !_isEditMode;
+                              });
+                            }
                           },
                         ),
                         // IconButton(

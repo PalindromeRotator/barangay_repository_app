@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:barangay_repository_app/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -167,6 +169,25 @@ class FirebaseQuery {
     //     .doc(documentId)
     //     .set(users)
     //     .onError((e, _) => print("Error writing document: $e"));
+  }
+
+  Future<void> appointOrRequestAppointment(
+      Object data, String documentId) async {
+    FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
+
+    final usersRef = firestoreDB.collection("users").doc(documentId);
+    var snapshot = await usersRef.get();
+    var dataSnap = snapshot.data() as Map<String, dynamic>;
+
+    if (dataSnap['appointments'] != null) {
+      var dataTemp = jsonDecode(dataSnap['appointments']);
+      dataTemp.add(data);
+      usersRef.update({"appointments": jsonEncode(dataTemp)});
+    } else {
+      usersRef.update({
+        "appointments": jsonEncode([data])
+      });
+    }
   }
 
   Future<void> logout(FirebaseAuth auth, Function(void) thenPress) async {
