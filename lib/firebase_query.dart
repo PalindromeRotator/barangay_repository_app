@@ -171,23 +171,119 @@ class FirebaseQuery {
     //     .onError((e, _) => print("Error writing document: $e"));
   }
 
-  Future<void> appointOrRequestAppointment(
-      Object data, String documentId) async {
+  // Future<void> appointOrRequestAppointment(
+  //     Object data, String documentId) async {
+  //   FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
+
+  //   final usersRef = firestoreDB.collection("users").doc(documentId);
+  //   var snapshot = await usersRef.get();
+  //   var dataSnap = snapshot.data() as Map<String, dynamic>;
+
+  //   if (dataSnap['appointments'] != null) {
+  //     var dataTemp = jsonDecode(dataSnap['appointments']);
+  //     dataTemp.add(data);
+  //     usersRef.update({"appointments": jsonEncode(dataTemp)});
+  //   } else {
+  //     usersRef.update({
+  //       "appointments": jsonEncode([data])
+  //     });
+  //   }
+  // }
+
+  Future<bool> setCertificate(
+    String userId,
+    dynamic appointmentDate,
+  ) async {
     FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
+    bool returnFlag = false;
+    DateTime currentTime = DateTime.now();
+    int epochTime = currentTime.millisecondsSinceEpoch;
+    final docRef = firestoreDB.collection("users").doc(userId);
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        final certificateDetails = <String, dynamic>{
+          "completeName": data['completeName'],
+          "lengthOfStay": data['lengthOfStay'],
+          "appointmentDate": appointmentDate,
+          "appointmentOwner": userId,
+        };
+        firestoreDB
+            .collection("barangayCertificate")
+            .doc(epochTime.toString())
+            .set(certificateDetails)
+            .then((value) => returnFlag = true)
+            .catchError((error) => print('error: $error'));
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    return returnFlag;
+  }
 
-    final usersRef = firestoreDB.collection("users").doc(documentId);
-    var snapshot = await usersRef.get();
-    var dataSnap = snapshot.data() as Map<String, dynamic>;
+  Future<bool> setClearance(
+    String userId,
+    dynamic appointmentDate,
+  ) async {
+    FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
+    bool returnFlag = false;
+    DateTime currentTime = DateTime.now();
+    int epochTime = currentTime.millisecondsSinceEpoch;
+    final docRef = firestoreDB.collection("users").doc(userId);
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        final certificateDetails = <String, dynamic>{
+          "completeName": data['completeName'],
+          "lengthOfStay": data['lengthOfStay'],
+          "appointmentDate": appointmentDate,
+          "appointmentOwner": userId,
+        };
+        firestoreDB
+            .collection("barangayClearance")
+            .doc(epochTime.toString())
+            .set(certificateDetails)
+            .then((value) => returnFlag = true)
+            .catchError((error) => print('error: $error'));
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    return returnFlag;
+  }
 
-    if (dataSnap['appointments'] != null) {
-      var dataTemp = jsonDecode(dataSnap['appointments']);
-      dataTemp.add(data);
-      usersRef.update({"appointments": jsonEncode(dataTemp)});
-    } else {
-      usersRef.update({
-        "appointments": jsonEncode([data])
-      });
-    }
+  Future<bool> setBrgID(
+    String userId,
+    dynamic appointmentDate,
+    String sex,
+    String age,
+    String weight,
+  ) async {
+    FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
+    bool returnFlag = false;
+    DateTime currentTime = DateTime.now();
+    int epochTime = currentTime.millisecondsSinceEpoch;
+    final docRef = firestoreDB.collection("users").doc(userId);
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        final certificateDetails = <String, dynamic>{
+          "completeName": data['completeName'],
+          "lengthOfStay": data['lengthOfStay'],
+          "appointmentDate": appointmentDate,
+          "appointmentOwner": userId,
+          "sex": sex,
+          "age": age,
+          "id": weight
+        };
+        firestoreDB
+            .collection("barangayID")
+            .doc(epochTime.toString())
+            .set(certificateDetails)
+            .then((value) => returnFlag = true)
+            .catchError((error) => print('error: $error'));
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    return returnFlag;
   }
 
   Future<void> logout(FirebaseAuth auth, Function(void) thenPress) async {

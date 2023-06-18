@@ -1,6 +1,9 @@
 import 'package:barangay_repository_app/firebase_query.dart';
+import 'package:barangay_repository_app/widgets/core/core_dropdown/core_dropdown.dart';
+import 'package:barangay_repository_app/widgets/core/core_textfield/core_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AppointmentPage extends StatefulWidget {
   const AppointmentPage({super.key});
@@ -14,13 +17,47 @@ class _AppointmentPageState extends State<AppointmentPage> {
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
 
-  final TextEditingController _certificateController =
-      new TextEditingController();
+  final TextEditingController _certificateController = TextEditingController();
+
+  final TextEditingController _sex = TextEditingController();
+
+  final TextEditingController _age = TextEditingController();
+
+  final TextEditingController _weight = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseQuery firebaseQuery = FirebaseQuery();
 
-  Future<void> _selectStartDate(BuildContext context) async {
+  List<String> dropdownOptions = ['Clearance', 'Certificate', 'ID'];
+  String selectedOption = '';
+
+  void handleDropdownChange(String newValue) {
+    setState(() {
+      selectedOption = newValue;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    selectedOption = dropdownOptions[0];
+  }
+  // Future<void> _selectStartDate(BuildContext context) async {
+  //   final DateTime? pickedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: _startDate,
+  //     firstDate: DateTime(2022),
+  //     lastDate: DateTime(2025),
+  //   );
+
+  //   if (pickedDate != null && pickedDate != _startDate) {
+  //     setState(() {
+  //       _startDate = pickedDate;
+  //     });
+  //   }
+  // }
+
+  Future<void> _selectAppointmentDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: _startDate,
@@ -34,21 +71,20 @@ class _AppointmentPageState extends State<AppointmentPage> {
       });
     }
   }
+  // Future<void> _selectEndDate(BuildContext context) async {
+  //   final DateTime? pickedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: _endDate,
+  //     firstDate: _startDate,
+  //     lastDate: DateTime(2025),
+  //   );
 
-  Future<void> _selectEndDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: _endDate,
-      firstDate: _startDate,
-      lastDate: DateTime(2025),
-    );
-
-    if (pickedDate != null && pickedDate != _endDate) {
-      setState(() {
-        _endDate = pickedDate;
-      });
-    }
-  }
+  //   if (pickedDate != null && pickedDate != _endDate) {
+  //     setState(() {
+  //       _endDate = pickedDate;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +102,20 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  controller: _certificateController,
-                  decoration: const InputDecoration(
-                    labelText: 'Certificate/Appointment',
-                    border: OutlineInputBorder(),
-                  ),
+                CoreDropdown(
+                  labelText: 'Select an option',
+                  options: dropdownOptions,
+                  selectedOption: selectedOption,
+                  onChanged: handleDropdownChange,
+                  enabled: true,
                 ),
+                // TextFormField(
+                //   controller: _certificateController,
+                //   decoration: const InputDecoration(
+                //     labelText: 'Certificate/Appointment',
+                //     border: OutlineInputBorder(),
+                //   ),
+                // ),
                 // const SizedBox(height: 16),
                 // TextFormField(
                 //   maxLines: 3,
@@ -96,46 +139,99 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 //   ],
                 // ),
                 // const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _selectStartDate(context),
-                        child: InputDecorator(
-                          decoration: const InputDecoration(
-                            labelText: 'Start Date',
-                            border: OutlineInputBorder(),
-                          ),
-                          child: Text(
-                            '${_startDate.day}/${_startDate.month}/${_startDate.year}',
-                          ),
-                        ),
-                      ),
+                InkWell(
+                  onTap: () => _selectAppointmentDate(context),
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Select appointment date',
+                      border: OutlineInputBorder(),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _selectEndDate(context),
-                        child: InputDecorator(
-                          decoration: const InputDecoration(
-                            labelText: 'End Date',
-                            border: OutlineInputBorder(),
-                          ),
-                          child: Text(
-                            '${_endDate.day}/${_endDate.month}/${_endDate.year}',
-                          ),
-                        ),
-                      ),
+                    child: Text(
+                      '${_startDate.day}/${_startDate.month}/${_startDate.year}',
                     ),
-                  ],
+                  ),
                 ),
                 const SizedBox(height: 16),
+                Visibility(
+                    visible: selectedOption == 'ID' ? true : false,
+                    child: Column(
+                      children: [
+                        CoreTextfield(
+                          labelText: 'Sex',
+                          controller: _sex,
+                        ),
+                        const SizedBox(height: 16),
+                        CoreTextfield(
+                          labelText: 'Age',
+                          controller: _age,
+                        ),
+                        const SizedBox(height: 16),
+                        CoreTextfield(
+                          labelText: 'Weight',
+                          controller: _weight,
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    )),
                 ElevatedButton(
                   onPressed: () {
                     // Handle save appointment logic
-                    firebaseQuery.appointOrRequestAppointment(
-                        {_certificateController.text, _startDate, _endDate},
-                        _auth.currentUser!.uid);
+                    // firebaseQuery.appointOrRequestAppointment(
+                    //     {_certificateController.text, _startDate, _endDate},
+                    //     _auth.currentUser!.uid);
+                    if (selectedOption == 'Certificate') {
+                      firebaseQuery
+                          .setCertificate(_auth.currentUser!.uid, _startDate)
+                          .then((value) => {
+                                Alert(
+                                    context: context,
+                                    type: AlertType.success,
+                                    desc: "Appointment success",
+                                    closeFunction: null,
+                                    buttons: [
+                                      DialogButton(
+                                          onPressed: (() {
+                                            Navigator.pop(context);
+                                          }),
+                                          child: const Text('OK'))
+                                    ]).show()
+                              });
+                    } else if (selectedOption == 'Clearance') {
+                      firebaseQuery
+                          .setCertificate(_auth.currentUser!.uid, _startDate)
+                          .then((value) => {
+                                Alert(
+                                    context: context,
+                                    type: AlertType.success,
+                                    desc: "Appointment success",
+                                    closeFunction: null,
+                                    buttons: [
+                                      DialogButton(
+                                          onPressed: (() {
+                                            Navigator.pop(context);
+                                          }),
+                                          child: const Text('OK'))
+                                    ]).show()
+                              });
+                    } else {
+                      firebaseQuery
+                          .setBrgID(_auth.currentUser!.uid, _startDate,
+                              _sex.text, _age.text, _weight.text)
+                          .then((value) => {
+                                Alert(
+                                    context: context,
+                                    type: AlertType.success,
+                                    desc: "Appointment success",
+                                    closeFunction: null,
+                                    buttons: [
+                                      DialogButton(
+                                          onPressed: (() {
+                                            Navigator.pop(context);
+                                          }),
+                                          child: const Text('OK'))
+                                    ]).show()
+                              });
+                    }
                   },
                   child: const Text('Save Appointment'),
                   style: ElevatedButton.styleFrom(
@@ -160,5 +256,13 @@ class _AppointmentPageState extends State<AppointmentPage> {
         });
       },
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _age.dispose();
+    _weight.dispose();
+    _sex.dispose();
   }
 }
