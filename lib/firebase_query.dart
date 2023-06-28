@@ -115,7 +115,7 @@ class FirebaseQuery {
 
   Future<Map<String, dynamic>> getUserCredentials(String documentId) async {
     FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
-    final docRef = firestoreDB.collection("users").doc(documentId);
+    final docRef = firestoreDB.collection("votersList").doc(documentId);
     var snapshot = await docRef.get();
     return snapshot.data() as Map<String, dynamic>;
     // ...
@@ -140,7 +140,7 @@ class FirebaseQuery {
       "createdAt": currentTime,
     };
     firestoreDB
-        .collection("users")
+        .collection("votersList")
         .doc(docId)
         .set(credentials)
         .then((value) => returnFlag = true)
@@ -161,11 +161,11 @@ class FirebaseQuery {
       "updatedAt": currentTime
     };
 
-    final usersRef = firestoreDB.collection("users").doc(documentId);
+    final usersRef = firestoreDB.collection("votersList").doc(documentId);
     usersRef.update(users);
 
     // firestoreDB
-    //     .collection("users")
+    //     .collection("votersList")
     //     .doc(documentId)
     //     .set(users)
     //     .onError((e, _) => print("Error writing document: $e"));
@@ -175,7 +175,7 @@ class FirebaseQuery {
   //     Object data, String documentId) async {
   //   FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
 
-  //   final usersRef = firestoreDB.collection("users").doc(documentId);
+  //   final usersRef = firestoreDB.collection("votersList").doc(documentId);
   //   var snapshot = await usersRef.get();
   //   var dataSnap = snapshot.data() as Map<String, dynamic>;
 
@@ -193,12 +193,13 @@ class FirebaseQuery {
   Future<bool> setCertificate(
     String userId,
     dynamic appointmentDate,
+    String purpose,
   ) async {
     FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
     bool returnFlag = false;
     DateTime currentTime = DateTime.now();
     int epochTime = currentTime.millisecondsSinceEpoch;
-    final docRef = firestoreDB.collection("users").doc(userId);
+    final docRef = firestoreDB.collection("votersList").doc(userId);
     docRef.get().then(
       (DocumentSnapshot doc) {
         final data = doc.data() as Map<String, dynamic>;
@@ -207,6 +208,7 @@ class FirebaseQuery {
           "lengthOfStay": data['lengthOfStay'],
           "appointmentDate": appointmentDate,
           "appointmentOwner": userId,
+          "purpose": purpose,
         };
         firestoreDB
             .collection("barangayCertificate")
@@ -223,12 +225,13 @@ class FirebaseQuery {
   Future<bool> setClearance(
     String userId,
     dynamic appointmentDate,
+    String purpose,
   ) async {
     FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
     bool returnFlag = false;
     DateTime currentTime = DateTime.now();
     int epochTime = currentTime.millisecondsSinceEpoch;
-    final docRef = firestoreDB.collection("users").doc(userId);
+    final docRef = firestoreDB.collection("votersList").doc(userId);
     docRef.get().then(
       (DocumentSnapshot doc) {
         final data = doc.data() as Map<String, dynamic>;
@@ -237,6 +240,7 @@ class FirebaseQuery {
           "lengthOfStay": data['lengthOfStay'],
           "appointmentDate": appointmentDate,
           "appointmentOwner": userId,
+          "purpose": purpose,
         };
         firestoreDB
             .collection("barangayClearance")
@@ -261,7 +265,7 @@ class FirebaseQuery {
     bool returnFlag = false;
     DateTime currentTime = DateTime.now();
     int epochTime = currentTime.millisecondsSinceEpoch;
-    final docRef = firestoreDB.collection("users").doc(userId);
+    final docRef = firestoreDB.collection("votersList").doc(userId);
     docRef.get().then(
       (DocumentSnapshot doc) {
         final data = doc.data() as Map<String, dynamic>;

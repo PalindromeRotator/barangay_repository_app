@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, unnecessary_new, sort_child_properties_last
 
+import 'package:barangay_repository_app/constants/colors.dart';
 import 'package:barangay_repository_app/global/responsive_sizing.dart';
 import 'package:flutter/material.dart';
 
@@ -24,9 +25,9 @@ class CoreButton extends StatelessWidget {
             backgroundColor: MaterialStateProperty.resolveWith<Color>(
               (Set<MaterialState> states) {
                 if (states.contains(MaterialState.pressed)) {
-                  return Color(0xFFFECD08);
+                  return AppColors.primaryColor;
                 }
-                return Color(0xFFFECD08);
+                return AppColors.primaryColor;
               },
             ),
           ),
@@ -58,9 +59,9 @@ class CoreButton extends StatelessWidget {
 //             backgroundColor: MaterialStateProperty.resolveWith<Color>(
 //               (Set<MaterialState> states) {
 //                 if (states.contains(MaterialState.pressed)) {
-//                   return Color(0xFFFECD08);
+//                   return AppColors.primaryColor;
 //                 }
-//                 return Color(0xFFFECD08);
+//                 return AppColors.primaryColor;
 //               },
 //             ),
 //           ),

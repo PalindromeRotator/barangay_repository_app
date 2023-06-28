@@ -136,26 +136,31 @@ class _RegisterPageState extends State<RegisterPage> {
 
                         registerFunctions.registerAcount().then((value) {
                           print('value: $value');
+
                           if (value) {
-                            // firebaseQuery
-                            //     .setUserCredentials(
-                            //         precintNumberController.text,
-                            //         lengthOfStayController.text,
-                            //         addressController.text,
-                            //         fullNameController.text,
-                            //         firebaseAuth.currentUser?.uid)
-                            //     .then((credentialValue) {
-                            //   if (credentialValue) {
-                            //     setState(() {
-                            //       isLoading = false;
-                            //     });
-                            //     firebaseAuth.signOut();
-                            //     Navigator.push(
-                            //         context,
-                            //         MaterialPageRoute(
-                            //             builder: (context) => LoginPage()));
-                            //   }
-                            // });
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                            firebaseQuery
+                                .setUserCredentials(
+                                    precintNumberController.text,
+                                    lengthOfStayController.text,
+                                    addressController.text,
+                                    fullNameController.text,
+                                    firebaseAuth.currentUser?.uid)
+                                .then((credentialValue) {
+                              if (credentialValue) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                firebaseAuth.signOut();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()));
+                              }
+                            });
                           }
                         });
                       } else {

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:barangay_repository_app/constants/colors.dart';
 
 class CoreCalendar extends StatefulWidget {
   const CoreCalendar({
@@ -105,9 +106,9 @@ class _CoreCalendarState extends State<CoreCalendar> {
             child: MaterialSegmentedControl(
               children: _children,
               selectionIndex: _currentSelection,
-              borderColor: const Color(0xFFFECD08),
+              borderColor: AppColors.primaryColor,
               selectedColor: Colors.white70,
-              unselectedColor: const Color(0xFFFECD08),
+              unselectedColor: AppColors.primaryColor,
               borderRadius: 5.0,
               disabledChildren: const [3],
               onSegmentChosen: (index) {
@@ -142,7 +143,7 @@ class _CoreCalendarState extends State<CoreCalendar> {
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
-              backgroundColor: Color(0xFFFECD08),
+              backgroundColor: AppColors.primaryColor,
             ),
             view: calendarView,
             dataSource: MeetingDataSource(sources),

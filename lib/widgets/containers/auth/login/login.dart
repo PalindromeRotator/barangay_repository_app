@@ -8,6 +8,7 @@ import 'package:barangay_repository_app/widgets/core/core_button/core_button.dar
 import 'package:barangay_repository_app/widgets/core/core_textfield/core_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:barangay_repository_app/constants/colors.dart';
 
 class CoreDropdown extends StatefulWidget {
   final String labelText;
@@ -58,7 +59,7 @@ class _CoreDropdownState extends State<CoreDropdown> {
           borderRadius: BorderRadius.circular(4.0),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFFFECD08), width: 2.0),
+          borderSide: BorderSide(color: AppColors.primaryColor, width: 2.0),
           borderRadius: BorderRadius.circular(4.0),
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),

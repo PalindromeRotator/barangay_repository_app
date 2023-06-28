@@ -4,6 +4,7 @@ import 'package:barangay_repository_app/widgets/core/core_textfield/core_textfie
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:barangay_repository_app/constants/colors.dart';
 
 class AppointmentPage extends StatefulWidget {
   const AppointmentPage({super.key});
@@ -24,6 +25,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
   final TextEditingController _age = TextEditingController();
 
   final TextEditingController _weight = TextEditingController();
+
+  final TextEditingController purposeController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseQuery firebaseQuery = FirebaseQuery();
@@ -116,14 +119,20 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 //     border: OutlineInputBorder(),
                 //   ),
                 // ),
-                // const SizedBox(height: 16),
-                // TextFormField(
-                //   maxLines: 3,
-                //   decoration: const InputDecoration(
-                //     labelText: 'Description',
-                //     border: OutlineInputBorder(),
-                //   ),
-                // ),
+                const SizedBox(height: 16),
+                Visibility(
+                    visible: selectedOption == 'Clearance' ||
+                            selectedOption == 'Certificate'
+                        ? true
+                        : false,
+                    child: TextFormField(
+                      maxLines: 3,
+                      controller: purposeController,
+                      decoration: const InputDecoration(
+                        labelText: 'Purpose',
+                        border: OutlineInputBorder(),
+                      ),
+                    )),
                 const SizedBox(height: 16),
                 // const Text(
                 //   'Priority',
@@ -181,7 +190,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
                     //     _auth.currentUser!.uid);
                     if (selectedOption == 'Certificate') {
                       firebaseQuery
-                          .setCertificate(_auth.currentUser!.uid, _startDate)
+                          .setCertificate(_auth.currentUser!.uid, _startDate,
+                              purposeController.text)
                           .then((value) => {
                                 Alert(
                                     context: context,
@@ -198,7 +208,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
                               });
                     } else if (selectedOption == 'Clearance') {
                       firebaseQuery
-                          .setCertificate(_auth.currentUser!.uid, _startDate)
+                          .setCertificate(_auth.currentUser!.uid, _startDate,
+                              purposeController.text)
                           .then((value) => {
                                 Alert(
                                     context: context,
@@ -235,7 +246,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   },
                   child: const Text('Save Appointment'),
                   style: ElevatedButton.styleFrom(
-                    primary: const Color(0xFFFECD08),
+                    primary: AppColors.primaryColor,
                   ),
                 ),
               ],

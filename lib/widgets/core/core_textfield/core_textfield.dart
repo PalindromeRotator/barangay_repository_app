@@ -3,6 +3,7 @@
 import 'package:barangay_repository_app/global/responsive_sizing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:barangay_repository_app/constants/colors.dart';
 
 class CoreTextfield extends StatefulWidget {
   final String labelText;
@@ -79,7 +80,7 @@ class _CoreTextfieldState extends State<CoreTextfield> {
               borderRadius: BorderRadius.circular(4.0),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFFECD08), width: 2.0),
+              borderSide: BorderSide(color: AppColors.primaryColor, width: 2.0),
               borderRadius: BorderRadius.circular(4.0),
             ),
             border: OutlineInputBorder(
@@ -105,7 +106,7 @@ class _CoreTextfieldState extends State<CoreTextfield> {
               : TextInputType.text,
           textInputAction: TextInputAction.done,
           maxLines: 1,
-          cursorColor: Color(0xFFFECD08),
+          cursorColor: AppColors.primaryColor,
           cursorWidth: 2.0,
           cursorHeight: 24.0,
           cursorRadius: Radius.circular(2.0),

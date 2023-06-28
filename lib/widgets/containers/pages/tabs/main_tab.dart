@@ -8,6 +8,7 @@ import 'package:barangay_repository_app/widgets/containers/pages/tabs/profile.da
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:barangay_repository_app/constants/colors.dart';
 
 class MainTab extends StatefulWidget {
   const MainTab({super.key});
@@ -53,7 +54,7 @@ class _MainTabState extends State<MainTab> {
     return Scaffold(
         body: bottomBarPages.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: const Color(0xFFFECD08),
+          selectedItemColor: AppColors.primaryColor,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month),

@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:barangay_repository_app/constants/colors.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -76,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 // height: responsive
                 //     .calc_height(MediaQuery.of(context).size.height * 0.3),
-                color: Color(0xFFFECD08),
+                color: AppColors.primaryColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
