@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:barangay_repository_app/firebase_query.dart';
 import 'package:barangay_repository_app/global/responsive_sizing.dart';
 import 'package:barangay_repository_app/widgets/containers/auth/login/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:barangay_repository_app/constants/colors.dart';
 
@@ -17,6 +17,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+ final LocalStorage storage = LocalStorage('fingerprint');
   final FirebaseFirestore firestoreDB = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseQuery firebaseQuery = FirebaseQuery();
@@ -28,6 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
       TextEditingController();
   // TextEditingController _bioController = TextEditingController();
   bool _isEditMode = false;
+  bool? _isFingerprintOn = false;
 
   @override
   void dispose() {
@@ -39,9 +41,13 @@ class _ProfilePageState extends State<ProfilePage> {
     // _bioController.dispose();
     super.dispose();
   }
-
   @override
   void initState() {
+    // _isFingerprintOn =  storage.getItem('fingerprint');
+    if(storage.getItem('fingerprint') != null){
+      _isFingerprintOn =  true;
+      print(storage.getItem('fingerprint'));
+    }
     var temp = firebaseQuery
         .getUserCredentials(_auth.currentUser!.uid.toString())
         .then(
@@ -191,6 +197,24 @@ class _ProfilePageState extends State<ProfilePage> {
                         label: 'Email',
                         controller: _emailController,
                       ),
+                      SizedBox(height: 20.0),
+                      Row(children: [
+                        Text('With Fingerprint'),
+                        Switch(value: _isFingerprintOn!, onChanged:(value) {
+                          setState(() {
+                            
+                            _isFingerprintOn = value;
+                          });
+                          if(value){
+                             storage.setItem('fingerprint', 'yes');
+                             storage.setItem('email', _emailController.text);
+                          }
+                          else{
+                            storage.clear();
+                          }
+                      },),
+                      ],),
+                      
                       SizedBox(height: 20.0),
                       SizedBox(
                         width: responsive

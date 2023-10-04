@@ -36,12 +36,13 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.white, // Customize the background color if needed
       body: Center(
-        child: Image.asset(
-          'assets/images/splash_image.png', // Replace with your image path
-          width: 200,
-          height: 200,
-          // Customize the image width and height as per your requirement
-        ),
+        child: SizedBox(
+                          width: 200,
+                          height: 200,
+                          child: Image.asset(
+                            'assets/sn3.png',
+                          ),
+                        ),
       ),
     );
   }
